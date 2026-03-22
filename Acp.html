@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CC 102 IT - Design & Completion Exam</title>
+    <style>
+        :root { --primary: #673ab7; --bg: #f0ebf8; --text: #202124; --success: #2e7d32; --error: #d32f2f; }
+        body { background-color: var(--bg); font-family: 'Segoe UI', sans-serif; display: flex; justify-content: center; padding: 10px; color: var(--text); }
+        .container { width: 100%; max-width: 750px; }
+        .card { background: white; border-radius: 8px; padding: 20px; margin-bottom: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); border: 1px solid #dadce0; }
+        .header { border-top: 10px solid var(--primary); text-align: center; }
+        .timer-box { position: sticky; top: 10px; z-index: 100; background: white; color: var(--primary); border: 2px solid var(--primary); padding: 10px; border-radius: 5px; text-align: center; font-weight: bold; margin-bottom: 10px; }
+        .question-text { font-size: 16px; font-weight: 600; margin-bottom: 12px; display: block; }
+        .code-block { background: #272822; color: #f8f8f2; padding: 15px; border-radius: 5px; font-family: 'Consolas', monospace; font-size: 14px; margin-bottom: 12px; line-height: 1.5; }
+        .blank { color: #ae81ff; font-weight: bold; text-decoration: underline; }
+        .options { display: flex; flex-direction: column; gap: 8px; }
+        label { font-size: 14px; cursor: pointer; display: flex; align-items: center; padding: 10px; border: 1px solid #ddd; border-radius: 6px; }
+        input[type="radio"] { margin-right: 12px; }
+        .feedback { margin-top: 10px; padding: 10px; border-radius: 4px; display: none; font-size: 14px; font-weight: 500; }
+        .wrong-card { border: 2px solid var(--error) !important; background-color: #fff8f8; }
+        .correct-card { border: 2px solid var(--success) !important; background-color: #f8fff8; }
+        .btn { background: var(--primary); color: white; border: none; padding: 15px; width: 100%; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 16px; margin-top: 20px; }
+        #result-card { display: none; text-align: center; border: 3px solid var(--primary); }
+        code { background: #f4f4f4; padding: 2px 4px; border-radius: 3px; font-family: monospace; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="timer" class="timer-box">Time Elapsed: 00:00</div>
+        <div class="card header">
+            <h1>CC 102: Code Completion</h1>
+            <p><strong>Advance Comprog mock test ----Jetstrike</strong><br>Fill in the missing logic (60 Items)</p>
+        </div>
+        <form id="quizForm">
+            <div id="questionContainer"></div>
+            <button type="button" id="submitBtn" class="btn" onclick="checkQuiz()">Submit Exam</button>
+        </form>
+        <div id="result-card" class="card">
+            <h2>Results</h2>
+            <p style="font-size: 24px;">Score: <span id="scoreText">0</span> / 60</p>
+            <p id="timeText"></p>
+            <button class="btn" onclick="location.reload()">Restart Exam</button>
+        </div>
+    </div>
+
+    <script>
+        let seconds = 0;
+        const timerInterval = setInterval(() => {
+            seconds++;
+            let m = Math.floor(seconds/60), s = seconds%60;
+            document.getElementById('timer').innerHTML = `Time Elapsed: ${m}:${s<10?'0':''}${s}`;
+        }, 1000);
+
+        const questions = [
+            /* PART 1: LISTS (1-15) - Completion & Output */
+            { q: "Complete the code to add 'Tea' to the end of the list:", code: "beverages = ['Water', 'Coffee']\nbeverages.<span class='blank'>_____</span>('Tea')", a: "append", o: ["append", "insert", "add"] },
+            { q: "Complete the code to put 'Soda' at the very beginning:", code: "beverages = ['Water', 'Coffee']\nbeverages.<span class='blank'>_____</span>(0, 'Soda')", a: "insert", o: ["append", "insert", "push"] },
+            { q: "How do you remove 'Water' by its name?", code: "beverages.<span class='blank'>_____</span>('Water')", a: "remove", o: ["pop", "remove", "del"] },
+            { q: "What is the result of L[1] if L = ['A', 'B', 'C']?", a: "B", o: ["A", "B", "C"] },
+            { q: "Complete to get the total count of items:", code: "total = <span class='blank'>_____</span>(my_list)", a: "len", o: ["length", "count", "len"] },
+            { q: "To replace the 1st item with 'Juice':", code: "beverages[<span class='blank'>_____</span>] = 'Juice'", a: "0", o: ["0", "1", "-1"] },
+            { q: "To delete the item at index 2 using the 'del' keyword:", code: "<span class='blank'>_____</span> beverages[2]", a: "del", o: ["remove", "pop", "del"] },
+            { q: "Which method removes and returns the last item?", a: "pop()", o: ["pop()", "remove()", "clear()"] },
+            { q: "Complete to add multiple items at once:", code: "L1.<span class='blank'>_____</span>(['D', 'E'])", a: "extend", o: ["append", "extend", "insert"] },
+            { q: "What is the index of the last item in any list?", a: "-1", o: ["0", "len(L)", "-1"] },
+            { q: "L.insert(2, 'X') puts 'X' at which index?", a: "2", o: ["1", "2", "3"] },
+            { q: "Does .append() return the modified list?", a: "No", o: ["Yes", "No"] },
+            { q: "Result of ['A'] * 2?", a: "['A', 'A']", o: "['A', 'A']|['AA']|Error".split('|') },
+            { q: "Complete to find the position of 'Coffee':", code: "pos = beverages.<span class='blank'>_____</span>('Coffee')", a: "index", o: ["find", "index", "search"] },
+            { q: "If L = [1, 2], what is L[2]? ", a: "IndexError", o: ["None", "0", "IndexError"] },
+
+            /* PART 2: DICTIONARIES (16-30) */
+            { q: "Access the dept of 'Santos':", code: "print(employees['Santos'][<span class='blank'>_____</span>])", a: "'dept'", o: ["'dept'", "dept", "0"] },
+            { q: "Add a new key 'role' with value 'Dev' to d['User']:", code: "d['User'][<span class='blank'>_____</span>] = 'Dev'", a: "'role'", o: ["role", "'role'", "add"] },
+            { q: "Complete to remove the entire 'Reyes' entry:", code: "<span class='blank'>_____</span> employees['Reyes']", a: "del", o: ["remove", "del", "pop"] },
+            { q: "Complete to check if 'Santos' is in the dictionary:", code: "if 'Santos' <span class='blank'>_____</span> employees:", a: "in", o: ["has", "exists", "in"] },
+            { q: "What does d.keys() return?", a: "All keys", o: ["All keys", "All values", "Key-Value pairs"] },
+            { q: "Update salary to 40000:", code: "employees['Santos']['salary'] <span class='blank'>_____</span> 40000", a: "=", o: ["=", "==", "update"] },
+            { q: "Complete to get only values from dict 'd':", code: "v = d.<span class='blank'>_____</span>()", a: "values", o: ["keys", "values", "items"] },
+            { q: "Access 'City' in d = {'Loc': {'City': 'Mnl'}}:", code: "d['Loc'][<span class='blank'>_____</span>]", a: "'City'", o: ["'City'", "City", "0"] },
+            { q: "Which method clears a dictionary?", a: "clear()", o: ["reset()", "clear()", "empty()"] },
+            { q: "What is the value of d['x'] if d = {'x': 1, 'x': 2}?", a: "2", o: ["1", "2", "Error"] },
+            { q: "Check if 'Engineering' is a KEY in employees:", a: "False", o: ["True", "False"] },
+            { q: "Method to get value safely without Error if missing:", a: "get()", o: ["fetch()", "get()", "access()"] },
+            { q: "Complete to iterate through pairs:", code: "for k, v in d.<span class='blank'>_____</span>():", a: "items", o: ["pairs", "items", "all"] },
+            { q: "Can a dictionary key be a tuple?", a: "Yes", o: ["Yes", "No"] },
+            { q: "What is the output of print({})?", a: "{}", o: ["{}", "None", "Error"] },
+
+            /* PART 3: SETS (31-45) */
+            { q: "Complete to get students in BOTH classes:", code: "both = morning <span class='blank'>_____</span> evening", a: "&", o: ["|", "&", "-"] },
+            { q: "Complete to get students in morning OR evening:", code: "all_students = morning <span class='blank'>_____</span> evening", a: "|", o: ["|", "&", "-"] },
+            { q: "Get students in morning BUT NOT in evening:", code: "exclusive = morning <span class='blank'>_____</span> evening", a: "-", o: ["|", "&", "-"] },
+            { q: "Method equivalent to A & B:", code: "A.<span class='blank'>_____</span>(B)", a: "intersection", o: ["union", "intersection", "difference"] },
+            { q: "Method equivalent to A | B:", code: "A.<span class='blank'>_____</span>(B)", a: "union", o: ["union", "intersection", "difference"] },
+            { q: "Add 'Felix' to the set:", code: "evening_class.<span class='blank'>_____</span>('Felix')", a: "add", o: ["append", "add", "insert"] },
+            { q: "What is the result of {1, 2} - {2, 3}?", a: "{1}", o: ["{1}", "{3}", "{1, 2, 3}"] },
+            { q: "Why check 'both' first in membership functions?", a: "Prevent misclassification", o: ["Faster code", "Prevent misclassification"] },
+            { q: "Result of {1, 1, 2}?", a: "{1, 2}", o: ["{1, 1, 2}", "{1, 2}", "Error"] },
+            { q: "Operator to check membership:", a: "in", o: ["in", "is", "== "] },
+            { q: "Which creates an empty set?", a: "set()", o: ["{}", "set()", "[]"] },
+            { q: "Are sets mutable?", a: "Yes", o: ["Yes", "No"] },
+            { q: "Result of {1, 2}.difference({1})?", a: "{2}", o: ["{1}", "{2}", "{1, 2}"] },
+            { q: "Can sets contain duplicates?", a: "No", o: ["Yes", "No"] },
+            { q: "Is union commutative (A|B == B|A)?", a: "Yes", o: ["Yes", "No"] },
+
+            /* PART 4: RECURSION GCD (46-60) */
+            { q: "Base case: if <span class='blank'>_____</span> == 0: return a", a: "b", o: ["a", "b", "0"] },
+            { q: "Recursive call: return gcd(b, <span class='blank'>_____</span>)", a: "a % b", o: ["a / b", "a % b", "a - b"] },
+            { q: "What is the remainder of 60 % 36?", a: "24", o: ["12", "24", "1"] },
+            { q: "Result of gcd(60, 36)?", a: "12", o: ["6", "12", "24"] },
+            { q: "Result of gcd(15, 10)?", a: "5", o: ["1", "5", "10"] },
+            { q: "First call tracing gcd(15, 10):", a: "gcd(10, 5)", o: ["gcd(10, 5)", "gcd(5, 0)", "gcd(10, 0)"] },
+            { q: "Second call tracing gcd(15, 10):", a: "gcd(5, 0)", o: ["gcd(10, 5)", "gcd(5, 0)", "gcd(5, 5)"] },
+            { q: "Final value returned by gcd(5, 0):", a: "5", o: ["0", "5", "10"] },
+            { q: "Recursive GCD uses which algorithm?", a: "Euclidean", o: ["Euclidean", "Pythagorean", "Binary"] },
+            { q: "What happens if you miss the base case?", a: "RecursionError", o: ["Nothing", "Infinite loop", "RecursionError"] },
+            { q: "Result of 10 % 5?", a: "0", o: ["0", "2", "5"] },
+            { q: "GCD of two prime numbers (e.g., 7, 13)?", a: "1", o: ["1", "7", "13"] },
+            { q: "Is gcd(a, b) same as gcd(b, a)?", a: "Yes", o: ["Yes", "No"] },
+            { q: "Complete to call the function:", code: "print(<span class='blank'>_____</span>(48, 18))", a: "gcd", o: ["gcd", "GCD", "calc"] },
+            { q: "What is the base case condition?", a: "b is zero", o: ["a is zero", "b is zero", "a equals b"] }
+        ];
+
+        const container = document.getElementById('questionContainer');
+        questions.forEach((item, i) => {
+            const div = document.createElement('div');
+            div.className = 'card'; div.id = `q${i}`;
+            div.innerHTML = `<span class="question-text">${i+1}. ${item.q}</span>
+                ${item.code ? `<div class="code-block">${item.code}</div>` : ''}
+                <div class="options">${item.o.map(o => `<label><input type="radio" name="r${i}" value="${o}"><code>${o}</code></label>`).join('')}</div>
+                <div id="f${i}" class="feedback"></div>`;
+            container.appendChild(div);
+        });
+
+        function checkQuiz() {
+            clearInterval(timerInterval);
+            let score = 0;
+            questions.forEach((item, i) => {
+                const sel = document.querySelector(`input[name="r${i}"]:checked`);
+                const f = document.getElementById(`f${i}`), c = document.getElementById(`q${i}`);
+                f.style.display = "block";
+                if(sel && sel.value === item.a) { 
+                    score++; c.classList.add('correct-card'); f.innerHTML = "✓ Correct"; f.style.color = "var(--success)"; 
+                } else { 
+                    c.classList.add('wrong-card'); f.innerHTML = `✗ Wrong. Correct: ${item.a}`; f.style.color = "var(--error)"; 
+                }
+            });
+            document.getElementById('scoreText').innerText = score;
+            document.getElementById('result-card').style.display = "block";
+            document.getElementById('submitBtn').style.display = "none";
+            document.querySelectorAll('input').forEach(inp => inp.disabled = true);
+            window.scrollTo({top:0, behavior:'smooth'});
+        }
+    </script>
+</body>
+</html>
